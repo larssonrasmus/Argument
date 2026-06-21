@@ -1,1 +1,15 @@
+# Go files
+*.go
+
+# Config
 config.toml
+
+# Binary files
+*.exe
+
+# Dependency directories
+vendor/
+
+# Output directories
+bin/
+pkg/
