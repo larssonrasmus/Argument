@@ -7,6 +7,9 @@ config.toml
 # Binary files
 *.exe
 
+# SQLite database
+*.db
+
 # Dependency directories
 vendor/
 

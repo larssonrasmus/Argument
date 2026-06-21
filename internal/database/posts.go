@@ -1,5 +1,7 @@
 package database
 
+import "fmt"
+
 // Post is a new thread on the discussion board
 type Post struct {
 	ID          int
@@ -9,7 +11,12 @@ type Post struct {
 
 // GetPosts loads all the available posts from the database
 func GetPosts() []Post {
-	results, _ := db.Query("SELECT id, title, created_at FROM posts")
+	results, err := db.Query("SELECT id, title, created_at FROM posts")
+
+	if err != nil {
+		panic(fmt.Errorf("query posts: %w", err))
+	}
+	defer results.Close()
 
 	var posts []Post
 

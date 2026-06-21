@@ -8,7 +8,7 @@ import (
 
 func setupTest() {
 	Disconnect()
-	Connect(config.Conf.Database.URI)
+	Connect("mysql", config.Conf.Database.URI)
 }
 
 func TestBrokenDB(t *testing.T) {
@@ -23,6 +23,5 @@ func TestBrokenDB(t *testing.T) {
 }
 
 func TestConnectingTwice(t *testing.T) {
-	Connect(config.Conf.Database.URI)
-	Connect(config.Conf.Database.URI)
+	Connect("mysql", config.Conf.Database.URI)
 }

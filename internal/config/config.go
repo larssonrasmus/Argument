@@ -16,6 +16,7 @@ type Config struct {
 	Debug      bool
 	SessionKey string
 	Database   struct {
+		Driver   string
 		Username string
 		Password string
 		Name     string
@@ -59,6 +60,16 @@ func SetupConfig(stream []byte) Config {
 
 	if "" == config.Title {
 		config.Title = "Argument"
+	}
+
+	if "" != os.Getenv("DB_DRIVER") {
+		config.Database.Driver = os.Getenv("DB_DRIVER")
+	}
+
+	if "sqlite" == config.Database.Driver {
+		config.Database.URI = "argument.db"
+
+		return config
 	}
 
 	if "" != os.Getenv("DB_HOST") {
