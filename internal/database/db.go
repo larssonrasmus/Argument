@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 
-	"github.com/AmusableLemur/Argument/internal/config"
+	"argument/internal/config"
 
 	// Imported to get MySQL support
 	_ "github.com/go-sql-driver/mysql"

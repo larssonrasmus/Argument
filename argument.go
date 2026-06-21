@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/AmusableLemur/Argument/internal/app"
-	"github.com/AmusableLemur/Argument/internal/config"
+	"argument/internal/app"
+	"argument/internal/config"
 )
 
 var conf config.Config

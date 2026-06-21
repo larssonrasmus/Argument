@@ -5,7 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/AmusableLemur/Argument/internal/config"
+	"argument/internal/config"
+
 	"github.com/stretchr/testify/assert"
 )
 

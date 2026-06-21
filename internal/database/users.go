@@ -3,7 +3,7 @@ package database
 import (
 	"errors"
 
-	"github.com/AmusableLemur/Argument/internal/auth"
+	"argument/internal/auth"
 )
 
 // User contains everything required for a user

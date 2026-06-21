@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/AmusableLemur/Argument/internal/config"
+	"argument/internal/config"
 )
 
 func setupTest() {

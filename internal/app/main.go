@@ -4,9 +4,10 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/AmusableLemur/Argument/internal/auth"
-	"github.com/AmusableLemur/Argument/internal/config"
-	"github.com/AmusableLemur/Argument/internal/database"
+	"argument/internal/auth"
+	"argument/internal/config"
+	"argument/internal/database"
+
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 )

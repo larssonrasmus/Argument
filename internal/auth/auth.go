@@ -3,7 +3,8 @@ package auth
 import (
 	"unicode"
 
-	"github.com/AmusableLemur/Argument/internal/config"
+	"argument/internal/config"
+
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/text/transform"
