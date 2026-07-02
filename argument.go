@@ -1,24 +1,61 @@
 package main
 
 import (
+	"flag"
+	"html/template"
 	"log"
 	"net/http"
-	"time"
+	"os"
+	"strconv"
 
-	"argument/internal/app"
-	"argument/internal/config"
+	"github.com/pelletier/go-toml"
 )
 
-var conf config.Config
+type arguments struct {
+	config string
+	port   int
+}
 
-func main() {
-	srv := &http.Server{
-		Handler: app.SetupHandler(),
-		Addr:    "127.0.0.1:8080",
-		// Good practice: enforce timeouts for servers you create!
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+type config struct {
+	Title string `toml:"title"`
+	Logo  string `toml:"logo"`
+}
+
+var args arguments
+var cfg config
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("templates/splash.html")
+
+	if err := t.Execute(w, cfg); err != nil {
+		log.Println(err)
+		http.Error(w, "template error", http.StatusInternalServerError)
+	}
+}
+
+func loadConfig(file string) {
+	f, err := os.ReadFile(file)
+	if err != nil {
+		log.Fatal("could not read config file:", err)
 	}
 
-	log.Fatal(srv.ListenAndServe())
+	if err := toml.Unmarshal(f, &cfg); err != nil {
+		log.Fatal("could not parse config:", err)
+	}
+
+	log.Println("loaded config", file)
+}
+
+func main() {
+	flag.StringVar(&args.config, "config", "config.toml", "config file")
+	flag.IntVar(&args.port, "port", 8080, "server port")
+	flag.Parse()
+
+	log.Println("starting server on port", args.port)
+
+	loadConfig(args.config)
+
+	http.HandleFunc("/", handler)
+
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(args.port), nil))
 }
