@@ -1,14 +1,98 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Title }}</title>
+    <style>
+        html {
+            background: black;
+            color: limegreen;
+        }
+
+        body {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        pre {
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: normal;
+            font-size: 2em;
+            margin: 0;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        form {
+            border: 1px solid limegreen;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        form input {
+            background: black;
+            color: limegreen;
+            border: 1px solid limegreen;
+            padding: 5px;
+            margin: 5px 0;
+        }
+
+        form button {
+            background: black;
+            color: limegreen;
+            border: 1px solid limegreen;
+            padding: 5px;
+            margin: 5px 0;
+        }
+    </style>
 </head>
 
 <body>
-    Welcome to {{ .Title }}!
-
     <pre>{{ .Logo }}</pre>
+
+    <h1>{{ .Title }}</h1>
+    <p>est. 2026 · running on Go · somewhere on the internet</p>
+
+    <div>
+        <div>
+            <span>247</span>
+            users
+        </div>
+        <div>
+            <span>12</span>
+            online
+        </div>
+        <div>
+            <span>2</span>
+            chat rooms
+        </div>
+        <div>
+            <span>4</span>
+            boards
+        </div>
+        <div>
+            <span>1,840</span>
+            posts
+        </div>
+    </div>
+
+    <form action="/login" method="post">
+        <input type="text" name="username" placeholder="username">
+        <input type="password" name="password" placeholder="password">
+        <button type="submit">login</button>
+        <a href="/register">apply for an account</a>
+    </form>
 </body>
 
 </html>
