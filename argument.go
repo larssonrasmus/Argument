@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/pelletier/go-toml"
 )
 
@@ -23,6 +25,7 @@ type config struct {
 
 var args arguments
 var cfg config
+var sessionManager *scs.SessionManager
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("templates/splash.html")
@@ -51,11 +54,15 @@ func main() {
 	flag.IntVar(&args.port, "port", 8080, "server port")
 	flag.Parse()
 
+	sessionManager = scs.New()
+	sessionManager.Lifetime = 24 * time.Hour
+
 	log.Println("starting server on port", args.port)
 
 	loadConfig(args.config)
 
-	http.HandleFunc("/", handler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", handler)
 
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(args.port), nil))
+	http.ListenAndServe(":"+strconv.Itoa(args.port), sessionManager.LoadAndSave(mux))
 }
