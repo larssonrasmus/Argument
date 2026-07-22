@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
 	"html/template"
 	"log"
@@ -9,8 +10,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/alexedwards/scs/gormstore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/pelletier/go-toml"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type arguments struct {
@@ -25,6 +29,7 @@ type config struct {
 
 var args arguments
 var cfg config
+var db *sql.DB
 var sessionManager *scs.SessionManager
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -54,9 +59,21 @@ func main() {
 	flag.IntVar(&args.port, "port", 8080, "server port")
 	flag.Parse()
 
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	if err != nil {
+		log.Fatal("failed to connect database", err)
+	}
+
+	log.Println("connected to SQLite database")
+
 	sessionManager = scs.New()
 	sessionManager.Lifetime = 24 * time.Hour
 
+	if sessionManager.Store, err = gormstore.New(db); err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("session manager initialized")
 	log.Println("starting server on port", args.port)
 
 	loadConfig(args.config)
