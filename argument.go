@@ -16,6 +16,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type App struct {
+	DB        *gorm.DB
+	Sessions  *scs.SessionManager
+	Config    config
+	Templates map[string]*template.Template
+}
+
 type arguments struct {
 	config string
 	port   int
@@ -27,21 +34,17 @@ type config struct {
 }
 
 var args arguments
-var cfg config
-var db gorm.DB
-var sessionManager *scs.SessionManager
 
-func handler(w http.ResponseWriter, r *http.Request) {
-
-	t, _ := template.ParseFiles("templates/splash.html")
-
-	if err := t.Execute(w, cfg); err != nil {
-		log.Println(err)
-		http.Error(w, "template error", http.StatusInternalServerError)
-	}
+func (app *App) handleSplash(w http.ResponseWriter, r *http.Request) {
+	app.Templates["splash"].Execute(w, app.Config)
 }
 
-func loadConfig(file string) {
+func (app *App) handleLogin(w http.ResponseWriter, r *http.Request) {
+	app.Templates["login"].Execute(w, app.Config)
+}
+
+func loadConfig(file string) config {
+	cfg := config{}
 	f, err := os.ReadFile(file)
 	if err != nil {
 		log.Fatal("could not read config file:", err)
@@ -51,7 +54,7 @@ func loadConfig(file string) {
 		log.Fatal("could not parse config:", err)
 	}
 
-	log.Println("loaded config", file)
+	return cfg
 }
 
 func main() {
@@ -59,29 +62,27 @@ func main() {
 	flag.IntVar(&args.port, "port", 8080, "server port")
 	flag.Parse()
 
-	log.Println("read config, starting up")
+	cfg := loadConfig(args.config)
 
-	db, err := gorm.Open(sqlite.Open("argument.db"), &gorm.Config{})
-	if err != nil {
-		log.Fatal("failed to connect database", err)
+	db, _ := gorm.Open(sqlite.Open("argument.db"), &gorm.Config{})
+
+	sm := scs.New()
+	sm.Store, _ = gormstore.New(db)
+	sm.Lifetime = 24 * time.Hour
+
+	app := &App{
+		Config:   cfg,
+		DB:       db,
+		Sessions: sm,
+		Templates: map[string]*template.Template{
+			"splash": template.Must(template.ParseGlob("templates/splash.html")),
+			"login":  template.Must(template.ParseGlob("templates/login.html")),
+		},
 	}
-
-	log.Println("connected to SQLite database")
-
-	sessionManager = scs.New()
-	sessionManager.Lifetime = 24 * time.Hour
-
-	if sessionManager.Store, err = gormstore.New(db); err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("session manager initialized")
-	log.Println("starting server on port", args.port)
-
-	loadConfig(args.config)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", handler)
 
-	http.ListenAndServe(":"+strconv.Itoa(args.port), sessionManager.LoadAndSave(mux))
+	mux.HandleFunc("GET /", app.handleSplash)
+
+	http.ListenAndServe(":"+strconv.Itoa(args.port), sm.LoadAndSave(mux))
 }
