@@ -57,10 +57,6 @@ func (app *App) handleSplash(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) handleLogin(w http.ResponseWriter, r *http.Request) {
-	app.Templates["splash"].Execute(w, app.Config)
-}
-
-func (app *App) handleLogout(w http.ResponseWriter, r *http.Request) {
 	handle := r.FormValue("handle")
 	password := r.FormValue("password")
 
@@ -78,6 +74,12 @@ func (app *App) handleLogout(w http.ResponseWriter, r *http.Request) {
 	app.Sessions.Put(r.Context(), "userID", int(user.ID))
 
 	http.Redirect(w, r, "/bbs", http.StatusSeeOther)
+}
+
+func (app *App) handleLogout(w http.ResponseWriter, r *http.Request) {
+	app.Sessions.Clear(r.Context())
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (app *App) handleRegistration(w http.ResponseWriter, r *http.Request) {
