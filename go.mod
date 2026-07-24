@@ -6,6 +6,7 @@ require (
 	github.com/alexedwards/scs/gormstore v0.0.0-20251002162104-209de6e426de
 	github.com/alexedwards/scs/v2 v2.9.0
 	github.com/pelletier/go-toml v1.9.5
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.31.2
 )

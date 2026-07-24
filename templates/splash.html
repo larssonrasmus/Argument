@@ -87,11 +87,17 @@
         </div>
     </div>
 
-    <form action="/login" method="post">
-        <input type="text" name="username" placeholder="username">
-        <input type="password" name="password" placeholder="password">
-        <button type="submit">login</button>
-        <a href="/register">apply for an account</a>
+    <form method="POST" action="/login">
+        <input type="text" name="handle" />
+        <input type="password" name="password" />
+        <button type="submit">[ LOGIN ]</button>
+    </form>
+
+    <form method="POST" action="/register">
+        <input type="text" name="handle" />
+        <input type="text" name="email" />
+        <input type="password" name="password" />
+        <button type="submit">[ APPLY ]</button>
     </form>
 </body>
 
