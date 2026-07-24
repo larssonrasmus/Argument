@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"html/template"
 	"log"
@@ -29,10 +28,11 @@ type config struct {
 
 var args arguments
 var cfg config
-var db *sql.DB
+var db gorm.DB
 var sessionManager *scs.SessionManager
 
 func handler(w http.ResponseWriter, r *http.Request) {
+
 	t, _ := template.ParseFiles("templates/splash.html")
 
 	if err := t.Execute(w, cfg); err != nil {
@@ -59,7 +59,9 @@ func main() {
 	flag.IntVar(&args.port, "port", 8080, "server port")
 	flag.Parse()
 
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	log.Println("read config, starting up")
+
+	db, err := gorm.Open(sqlite.Open("argument.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database", err)
 	}
