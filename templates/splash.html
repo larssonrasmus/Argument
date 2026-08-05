@@ -9,10 +9,11 @@
         html {
             background: black;
             color: limegreen;
+            font-family: monospace;
         }
 
         body {
-            max-width: 600px;
+            max-width: 480px;
             margin: 0 auto;
         }
 
@@ -27,12 +28,17 @@
             margin: 0;
         }
 
+        a {
+            color: limegreen;
+        }
+
         p {
             text-align: center;
             font-size: 1.2em;
         }
 
         form {
+            background: rgb(5, 5, 5);
             border: 1px solid limegreen;
             padding: 20px;
             display: flex;
@@ -40,11 +46,20 @@
             text-align: center;
         }
 
+        form label {
+            font-family: monospace;
+            font-size: 0.9em;
+            line-height: 1.5em;
+            margin-top: 1em;
+            text-align: left;
+            text-transform: uppercase;
+        }
+
         form input {
-            background: black;
-            color: limegreen;
-            border: 1px solid limegreen;
-            padding: 5px;
+            background: rgb(20, 20, 20);
+            color: rgb(0, 255, 0);
+            border: 1px solid rgb(63, 63, 63);
+            padding: 12px;
             margin: 5px 0;
         }
 
@@ -52,8 +67,39 @@
             background: black;
             color: limegreen;
             border: 1px solid limegreen;
-            padding: 5px;
+            padding: 12px;
             margin: 5px 0;
+        }
+
+        form button:hover {
+            background: limegreen;
+            color: black;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+        }
+
+        .stats {
+            border-bottom: 1px solid rgb(63, 63, 63);
+            border-top: 1px solid rgb(63, 63, 63);
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .metric {
+            color: rgb(0, 151, 0);
+        }
+
+        .metric span {
+            color: rgb(0, 255, 0);
+            text-align: center;
+            display: block;
+            font-size: 1.4em;
         }
     </style>
 </head>
@@ -61,43 +107,47 @@
 <body>
     <pre>{{ .Logo }}</pre>
 
-    <h1>{{ .Title }}</h1>
-    <p>est. 2026 · running on Go · somewhere on the internet</p>
-
-    <div>
-        <div>
+    <div class="stats">
+        <div class="metric">
             <span>247</span>
             users
         </div>
-        <div>
+        <div class="metric">
             <span>12</span>
             online
         </div>
-        <div>
+        <div class="metric">
             <span>2</span>
-            chat rooms
+            in chat
         </div>
-        <div>
-            <span>4</span>
-            boards
-        </div>
-        <div>
+        <div class="metric">
             <span>1,840</span>
             posts
         </div>
     </div>
 
-    <form method="POST" action="/login">
-        <input type="text" name="handle" />
-        <input type="password" name="password" />
-        <button type="submit">[ LOGIN ]</button>
+    <form method="post" action="/login">
+        <label for="handle">handle</label>
+        <input type="text" name="handle" placeholder="your alias" autofocus>
+        <label for="password">password</label>
+        <input type="password" name="password" placeholder="your password">
+        <button type="submit">[ log in ]</button>
     </form>
 
-    <form method="POST" action="/register">
-        <input type="text" name="handle" />
-        <input type="text" name="email" />
-        <input type="password" name="password" />
-        <button type="submit">[ APPLY ]</button>
+    <footer>
+        <p>est. 2026 · running on Go · somewhere on the internet</p>
+
+        <a href="#">[ apply for an account ]</a>
+    </footer>
+
+    <form method="post" action="/register" style="display: none;">
+        <label for="handle">handle</label>
+        <input type="text" name="handle" placeholder="desired alias">
+        <label for="password">password</label>
+        <input type="password" name="password" placeholder="your password">
+        <label for="repeat">password (again)</label>
+        <input type="password" name="repeat" placeholder="repeat password">
+        <button type="submit">[ apply ]</button>
     </form>
 </body>
 
