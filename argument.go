@@ -45,7 +45,7 @@ var args arguments
 func (app *App) requireAuth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if app.Sessions.GetInt(r.Context(), "userID") == 0 {
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
 		next(w, r)
@@ -53,7 +53,7 @@ func (app *App) requireAuth(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func (app *App) handleSplash(w http.ResponseWriter, r *http.Request) {
-	app.Templates["splash"].Execute(w, app.Config)
+	app.Templates["login"].Execute(w, app.Config)
 }
 
 func (app *App) handleLogin(w http.ResponseWriter, r *http.Request) {
@@ -128,15 +128,16 @@ func main() {
 		DB:       db,
 		Sessions: sm,
 		Templates: map[string]*template.Template{
-			"splash": template.Must(template.ParseGlob("templates/splash.html")),
+			"login":    template.Must(template.ParseGlob("templates/login.html")),
+			"register": template.Must(template.ParseGlob("templates/register.html")),
 		},
 	}
 
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /", app.handleSplash)
-	mux.HandleFunc("POST /login", app.handleLogin)
-	mux.HandleFunc("POST /register", app.handleRegistration)
+	mux.HandleFunc("/login", app.handleLogin)
+	mux.HandleFunc("/register", app.handleRegistration)
 	mux.HandleFunc("POST /logout", app.handleLogout)
 
 	http.ListenAndServe(":"+strconv.Itoa(args.port), sm.LoadAndSave(mux))
